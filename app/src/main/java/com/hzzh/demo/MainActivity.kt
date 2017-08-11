@@ -1,12 +1,17 @@
-package com.hzzh.baselibrary
+package com.hzzh.demo
 
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
-
+import android.widget.Toast
+import com.hzzh.baselibrary.model.UserModel
+import com.hzzh.baselibrary.net.BaseResponse
+import com.hzzh.baselibrary.net.DataRepository
+import com.hzzh.baselibrary.net.transformer.DefaultTransformer
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.content_main.*
 
 class MainActivity : AppCompatActivity() {
 
@@ -18,6 +23,14 @@ class MainActivity : AppCompatActivity() {
         fab.setOnClickListener { view ->
             Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                     .setAction("Action", null).show()
+        }
+        tvLogin.setOnClickListener { view ->
+            val api = DataRepository.instance.getService(Api::class.java)
+            val obverable = api.login("zhapp01", "123456").compose(DefaultTransformer<BaseResponse<UserModel>, UserModel>()).subscribe({userModel->
+                Toast.makeText(this, userModel.getEmployeeName(), Toast.LENGTH_LONG).show()
+            },{
+                Toast.makeText(this, "bbb", Toast.LENGTH_LONG).show()
+            })
         }
     }
 

@@ -1,0 +1,17 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.hzzh.baselibrary" >
+    <application xmlns:tools="http://schemas.android.com/tools"
+        android:allowBackup="true"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        tools:replace="android:allowBackup">
+        <meta-data
+            android:name="NODEJS_ADDRESS"
+            android:value="${NODEJS_ADDRESS}">
+        </meta-data>
+        <meta-data
+            android:name="API_VERSION"
+            android:value="${API_VERSION}">
+        </meta-data>
+    </application>
+</manifest>

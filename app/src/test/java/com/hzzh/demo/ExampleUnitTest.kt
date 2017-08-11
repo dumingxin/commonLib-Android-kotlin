@@ -1,4 +1,4 @@
-package com.hzzh.baselibrary
+package com.hzzh.demo
 
 import org.junit.Test
 
