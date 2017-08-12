@@ -35,20 +35,20 @@ class RetryWhenNetworkException : Function<Observable<out Throwable>, Observable
     @Throws(Exception::class)
     override fun apply(observable: Observable<out Throwable>): Observable<*> {
         return observable
-                .zipWith(Observable.range(1, count + 1), BiFunction<Throwable, Int, Any> { t1, t2 -> Wrapper(t1, t2) })
-//                .flatMap(Function<Wrapper, Observable<*>> { wrapper ->
-//                    if ((wrapper.throwable is ConnectException
-//                            || wrapper.throwable is SocketTimeoutException
-//                            || wrapper.throwable is TimeoutException || wrapper.throwable is InvalidTimestampException) && wrapper.index < count + 1) { //如果超出重试次数也抛出错误，否则默认是会进入onCompleted
-//                        return@Function Observable.timer(delay + (wrapper.index - 1) * increaseDelay, TimeUnit.MILLISECONDS)
-//                    }
-//                    Observable.error<*>(wrapper.throwable!!)
-//                })
+                .zipWith(Observable.range(1, count + 1), BiFunction<Throwable, Int, Wrapper> { t1, t2 -> Wrapper(t1, t2) })
+                .flatMap(Function<Wrapper, Observable<*>> { wrapper ->
+                    if ((wrapper.throwable is ConnectException
+                            || wrapper.throwable is SocketTimeoutException
+                            || wrapper.throwable is TimeoutException || wrapper.throwable is InvalidTimestampException) && wrapper.index < count + 1) { //如果超出重试次数也抛出错误，否则默认是会进入onCompleted
+                        return@Function Observable.timer(delay + (wrapper.index - 1) * increaseDelay, TimeUnit.MILLISECONDS)
+                    }
+                    Observable.error<Throwable>(wrapper.throwable!!)
+                })
     }
 
 
-    private inner class Wrapper(throwable: Throwable, private val index: Int) {
-         var throwable: Throwable? = null
+    private inner class Wrapper(throwable: Throwable, val index: Int) {
+        var throwable: Throwable? = null
 
         init {
             if (throwable is CompositeException) {

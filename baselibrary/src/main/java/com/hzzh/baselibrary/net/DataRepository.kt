@@ -13,15 +13,13 @@ import java.util.*
 
 class DataRepository private constructor() {
 
-    lateinit var retrofit: Retrofit
+    var retrofit: Retrofit
 
     init {
         val builder = Retrofit.Builder()
         builder.baseUrl(ProjectConfig.apiServerAddress)
         builder.client(DefaultOkHttpClient.getTokenOkHttpClient())
-        val gson = GsonBuilder()
-                .create()
-        builder.addConverterFactory(GsonConverterFactory.create(gson))
+        builder.addConverterFactory(GsonConverterFactory.create(GsonBuilder().create()))
         builder.addCallAdapterFactory(RxJava2CallAdapterFactory.create())
         retrofit = builder.build()
     }
@@ -45,7 +43,7 @@ class DataRepository private constructor() {
     }
 
     companion object {
-        val instance = DataRepository()
+        @JvmStatic val instance = DataRepository()
     }
 
 }

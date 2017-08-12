@@ -16,7 +16,7 @@ import javax.net.ssl.X509TrustManager
  * Created by dmx on 2017/8/11.
  */
 object DefaultOkHttpClient {
-    private val DEFAULT_TIME_OUT = 60//默认的超时时间5秒钟
+    private val DEFAULT_TIME_OUT = 10//默认的超时时间5秒钟
 
     private val PASSWD = "pw1234";
 
@@ -38,7 +38,7 @@ object DefaultOkHttpClient {
                     .build()
             chain.proceed(authorised)
         }
-//        setCertificates(builder)
+        setCertificates(builder)
         val client = builder.build()
         return client
     }
@@ -77,8 +77,8 @@ object DefaultOkHttpClient {
 
         }
 
-        override fun getAcceptedIssuers(): Array<X509Certificate> {
-            throw  UnsupportedOperationException()
+        override fun getAcceptedIssuers(): Array<X509Certificate?> {
+            return arrayOfNulls(0)
         }
     }
 }
